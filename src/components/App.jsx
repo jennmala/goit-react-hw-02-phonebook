@@ -18,28 +18,33 @@ export class App extends Component {
     filter: '',
   };
 
-  addContact = data => {
-    const normalizedName = data.name.toLowerCase();
-    const sameContacts = this.state.contacts.reduce(
-      (total, contact) =>
-        (total =
-          contact.name.toLowerCase() === normalizedName ? total + 1 : total),
-      0
+  addContact = ({ name, number }) => {
+    const normalizedName = name.toLowerCase();
+    const sameContact = this.state.contacts.find(
+      contact => contact.name.toLowerCase() === normalizedName
     );
 
-    if (!sameContacts) {
-      const newContact = {
-        id: nanoid(),
-        name: data.name,
-        number: data.number,
-      };
+    // const amountOfSameContacts = this.state.contacts.reduce(
+    //   (total, contact) =>
+    //     (total =
+    //       contact.name.toLowerCase() === normalizedName ? total + 1 : total),
+    //   0
+    // );
 
-      this.setState(({ contacts }) => ({
-        contacts: [...contacts, newContact],
-      }));
-    } else {
-      alert(data.name + ' is already in contacts.');
+    if (sameContact) {
+      alert(name + ' is already in contacts.');
+      return;
     }
+
+    const newContact = {
+      id: nanoid(),
+      name,
+      number,
+    };
+
+    this.setState(({ contacts }) => ({
+      contacts: [...contacts, newContact],
+    }));
   };
 
   changeFilter = e => {
